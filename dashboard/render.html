@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>DTV Render</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"
+        integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta12/dist/js/tabler.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta12/dist/css/tabler.min.css">
+    <script src="render.js"></script>
+    <style>
+        .outer {
+            margin: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <div x-data="renderer" @refresh.window="setTimeout(getPresets, 500); showingForm = false" class="container outer">
+        <button class="btn mb-3" x-on:click="getPresets()">Refresh</button>
+        <button class="btn mb-3" x-on:click="showingForm = !showingForm">New Preset</button>
+        <template x-if="showingForm">
+            <div x-data="renderForm" class="container" style="margin-top: 20px;">
+                <div class="mb-3">
+                    <label class="form-label">Project</label>
+                    <input type="text" class="form-control" name="project-file" x-model="form.project">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Comp Name</label>
+                    <input type="text" class="form-control" name="comp-name" placeholder="BB Starting Lineups"
+                        x-model="form.comp">
+                </div>
+                <div class="mb-3 row">
+                    <div class="col">
+                        <label class="form-label">Start Frame</label>
+                        <input type="number" class="form-control" name="start-frame" placeholder="0"
+                            x-model="form.start_frame">
+                    </div>
+                    <div class="col">
+                        <label class="form-label">End Frame</label>
+                        <input type="number" class="form-control" name="end-frame" placeholder="500"
+                            x-model="form.end_frame">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-control" name="output-name" placeholder="Starting Lineups"
+                        x-model="form.output">
+                </div>
+                <div class="mb-3 row justify-content-start">
+                    <div class="col">
+                        <button class="btn btn-success" x-on:click="savePreset(); $dispatch('refresh')">Save Preset</button>
+                    </div>
+                    <div x-show="showDoneMessage" class="col">
+                        <p>Render complete!</p>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <div class="container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Project file</th>
+                        <th>Comp name</th>
+                        <th>Frames</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template x-for="preset in presets">
+                        <tr>
+                            <td x-text="preset.output"></td>
+                            <td x-text="preset.project"></td>
+                            <td x-text="preset.comp"></td>
+                            <td x-text="preset.end_frame"></td>
+                            <td>
+                                <button class="btn" x-on:click="removePreset(preset.id)"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                    <line x1="4" y1="7" x2="20" y2="7"></line>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                    <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                                 </svg></button>
+                                 <button x-on:click="console.log('render', preset)" class="btn">
+                                    Render
+                                 </button>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

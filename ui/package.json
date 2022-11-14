@@ -1,0 +1,26 @@
+{
+  "name": "ui",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^1.0.2",
+    "chota": "^0.8.0",
+    "svelte": "^3.49.0",
+    "svelte-chota": "^1.8.6",
+    "vite": "^3.1.0"
+  },
+  "dependencies": {
+    "@zerodevx/svelte-json-view": "^0.2.2",
+    "humanize-duration": "^3.27.3",
+    "jsonpatch": "^3.1.0",
+    "socket.io-client": "^4.5.2",
+    "svelte-jsoneditor": "^0.7.11",
+    "time-delta": "^1.0.0"
+  }
+}

@@ -20,6 +20,10 @@ stats = NCAALiveStats()
 
 
 async def read_live_stats(queue: asyncio.Queue, params: dict):
+    LISTENERS = {
+        "boxscore": [update_home_player]
+    }
+
     logger.info("Running NCAA Live Stats listener")
 
     reader, writer = await asyncio.open_connection("10.250.37.65", 7677)
@@ -31,7 +35,12 @@ async def read_live_stats(queue: asyncio.Queue, params: dict):
         line = await reader.readuntil(b"\r\n")
         decoded_line = line.decode()
         payload = json.loads(decoded_line)
+        p_type = payload.get("type", "")
         stats.receive(payload)
+        if p_type in LISTENERS:
+            funcs = LISTENERS[p_type]
+            for f in funcs:
+                await f(stats._game)
 
 
 def get_starters(game: Game):
@@ -52,7 +61,7 @@ def get_starters(game: Game):
 stats.add_listener("teams", get_starters)
 
 
-def update_home_player(game: Game):
+async def update_home_player(game: Game):
     current_player_num = STORE.get("homePlayerNum")
     player = game.home_team.players[current_player_num]
     line = compose_player_statline(player)
@@ -64,12 +73,7 @@ def update_home_player(game: Game):
         "homePlayerLine": line
     }
 
-    asyncio.run_coroutine_threadsafe(
-        queue.put({"sender": "NCAA Live Stats", "payload": payload})
-    )
-
-
-stats.add_listener("boxscore", update_home_player)
+    queue.put({"sender": "NCAA Live Stats", "payload": payload})
 
 
 @sio.event

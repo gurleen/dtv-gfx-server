@@ -61,10 +61,6 @@ def get_starters(game: Game):
 stats.add_listener("teams", get_starters)
 
 
-async def run_home_player_update():
-    await update_home_player(stats._game)
-
-
 async def update_home_player(game: Game):
     current_player_num = STORE.get("homePlayerNum")
     player = game.home_team.players[current_player_num]
@@ -78,6 +74,11 @@ async def update_home_player(game: Game):
     }
 
     queue.put({"sender": "NCAA Live Stats", "payload": payload})
+
+
+@sio.event
+async def run_home_update(_):
+    await update_home_player(stats._game)
 
 
 @sio.event

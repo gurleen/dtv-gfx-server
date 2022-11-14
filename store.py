@@ -9,10 +9,6 @@ from plugins.livestats import run_home_player_update
 
 STORE = {"foo": "bar", "bugFlying": False}
 
-STORE_LISTENERS = {
-    "homePlayerNum": run_home_player_update
-}
-
 
 async def store_patch(payload: dict):
     STORE.update(payload)
@@ -38,7 +34,4 @@ async def connect(sid, _):
 @sio.event
 async def store_update(sid, payload: dict):
     await store_patch(payload)
-    listener = STORE_LISTENERS.get(payload)
-    if listener:
-        await listener()
     logger.debug(f"Client {sid} sent patch: {payload}")

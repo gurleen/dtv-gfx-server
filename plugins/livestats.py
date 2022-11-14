@@ -63,7 +63,7 @@ stats.add_listener("teams", get_starters)
 
 async def update_home_player(game: Game):
     current_player_num = STORE.get("homePlayerNum")
-    player = game.home_team.players[current_player_num]
+    player = game.home_team.get_player_by_shirt(current_player_num)
     line = compose_player_statline(player)
 
     payload = {

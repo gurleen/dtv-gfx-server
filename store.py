@@ -5,7 +5,6 @@ import asyncio
 from loguru import logger
 
 from app import sio
-from plugins.livestats import run_home_player_update
 
 STORE = {"foo": "bar", "bugFlying": False}
 

@@ -52,7 +52,7 @@ def get_starters(game: Game):
 stats.add_listener("teams", get_starters)
 
 
-async def update_home_player(game: Game):
+def update_home_player(game: Game):
     current_player_num = STORE.get("homePlayerNum")
     player = game.home_team.players[current_player_num]
     line = compose_player_statline(player)
@@ -64,7 +64,8 @@ async def update_home_player(game: Game):
         "homePlayerLine": line
     }
 
-    await queue.put({"sender": "NCAA Live Stats", "payload": payload})
+    loop = asyncio.get_running_loop()
+    loop.run_until_complete(queue.put({"sender": "NCAA Live Stats", "payload": payload}))
 
 
 stats.add_listener("boxscore", update_home_player)

@@ -73,7 +73,7 @@ async def update_home_player(game: Game):
         "homePlayerLine": line
     }
 
-    queue.put({"sender": "NCAA Live Stats", "payload": payload})
+    await queue.put({"sender": "NCAA Live Stats", "payload": payload})
 
 
 @sio.event

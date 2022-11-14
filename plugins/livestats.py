@@ -61,13 +61,17 @@ def get_starters(game: Game):
 stats.add_listener("teams", get_starters)
 
 
+async def run_home_player_update():
+    await update_home_player(stats._game)
+
+
 async def update_home_player(game: Game):
     current_player_num = STORE.get("homePlayerNum")
     player = game.home_team.players[current_player_num]
     line = compose_player_statline(player)
 
     payload = {
-        "homePlayerName": player.full_name,
+        "homePlayerName": player.full_name.upper(),
         "homePlayerPos": player.position,
         "homePlayerShirt": player.shirt,
         "homePlayerLine": line

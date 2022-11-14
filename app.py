@@ -1,8 +1,8 @@
-import asyncio
 import json
 
 from aiohttp import web
 import socketio
+from janus import Queue
 
 
 def read_config() -> dict:
@@ -15,7 +15,9 @@ sio = socketio.AsyncServer(async_mode="aiohttp", cors_allowed_origins="*")
 app = web.Application()
 sio.attach(app)
 
-queue = asyncio.Queue()
+full_queue = Queue()
+queue = full_queue.async_q
+sync_queue = full_queue.sync_q
 
 app.router.add_static("/", "./dashboard", show_index=True)
 # app.router.add_static("/gfx", "./static", show_index=True)

@@ -1,7 +1,7 @@
 import asyncio
 import json
 
-from app import sio, queue
+from app import sio, sync_queue
 from store import STORE
 from loguru import logger
 from ncaa_live_stats import NCAALiveStats, Game
@@ -64,8 +64,7 @@ def update_home_player(game: Game):
         "homePlayerLine": line
     }
 
-    loop = asyncio.get_running_loop()
-    loop.run_until_complete(queue.put({"sender": "NCAA Live Stats", "payload": payload}))
+    sync_queue.put({"sender": "NCAA Live Stats", "payload": payload})
 
 
 stats.add_listener("boxscore", update_home_player)

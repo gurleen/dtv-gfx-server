@@ -27,6 +27,7 @@ idna==3.3
 inflection==0.5.1
 ipykernel==6.16.0
 ipython==8.5.0
+janus==1.0.0
 jedi==0.18.1
 jupyter-core==4.11.1
 jupyter_client==7.4.2

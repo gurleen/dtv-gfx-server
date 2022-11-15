@@ -9,6 +9,11 @@ function updateHome(e) {
     store.update({homePlayerNum: String(e.target.value)})
     emit("run_home_update")
 }
+
+function updateAway(e) {
+    store.update({awayPlayerNum: String(e.target.value)})
+    emit("run_away_update")
+}
 </script>
 
 <main>
@@ -38,6 +43,13 @@ function updateHome(e) {
                         <Row>
                             <Input number on:change={updateHome} />
                             <AnimToggleButton animName="Home Player Stats">PLAY</AnimToggleButton>
+                        </Row>
+                        <Row>
+                            Away LTH: {$store.awayPlayerNum}
+                        </Row>
+                        <Row>
+                            <Input number on:change={updateAway} />
+                            <AnimToggleButton animName="Away Player Stats">PLAY</AnimToggleButton>
                         </Row>
                     </Container>
                 </Card>

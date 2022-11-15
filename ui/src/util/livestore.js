@@ -17,7 +17,8 @@ function createLiveStore() {
     const { subscribe, set, update } = writable({
         bugFlying: false,
         clock: "0",
-        homePlayerNum: "0"
+        homePlayerNum: "0",
+        awayPlayerNum: "0"
     })
 
     return {

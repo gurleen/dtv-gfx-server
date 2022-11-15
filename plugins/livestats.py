@@ -79,6 +79,21 @@ async def update_home_player(game: Game):
     await queue.put({"sender": "NCAA Live Stats", "payload": payload})
 
 
+async def update_away_player(game: Game):
+    current_player_num = STORE.get("awayPlayerNum")
+    player = game.away_team.get_player_by_shirt(current_player_num)
+    line = compose_player_statline(player)
+
+    payload = {
+        "awayPlayerName": player.full_name.upper(),
+        "awayPlayerPos": player.position,
+        "awayPlayerShirt": player.shirt,
+        "awayPlayerLine": line
+    }
+
+    await queue.put({"sender": "NCAA Live Stats", "payload": payload})
+
+
 @sio.event
 async def run_home_update(_):
     await update_home_player(stats._game)

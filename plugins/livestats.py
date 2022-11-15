@@ -40,7 +40,10 @@ async def read_live_stats(queue: asyncio.Queue, params: dict):
         if p_type in LISTENERS:
             funcs = LISTENERS[p_type]
             for f in funcs:
-                await f(stats._game)
+                try:
+                    await f(stats._game)
+                finally:
+                    continue
 
 
 def get_starters(game: Game):

@@ -6,7 +6,7 @@ from loguru import logger
 
 from app import sio
 
-STORE = {"foo": "bar", "bugFlying": False}
+STORE = {"foo": "bar", "bugFlying": False, "compStat": "assists"}
 
 
 async def store_patch(payload: dict):

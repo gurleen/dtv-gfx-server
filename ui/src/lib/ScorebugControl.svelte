@@ -14,6 +14,12 @@ function updateAway(e) {
     store.update({awayPlayerNum: String(e.target.value)})
     emit("run_away_update")
 }
+
+let compStatValue = ""
+$: {
+    store.update({compStat: compStatValue})
+    emit("run_comp_update")
+}
 </script>
 
 <main>
@@ -50,6 +56,37 @@ function updateAway(e) {
                         <Row>
                             <Input number on:change={updateAway} />
                             <AnimToggleButton animName="Away Player Stats">PLAY</AnimToggleButton>
+                        </Row>
+                    </Container>
+                </Card>
+            </Col>
+            <Col size="5">
+                <Card class="is-center">
+                    <Container>
+                        <Row>
+                            Comparison Stat
+                            <select bind:value={compStatValue}>
+                                <option value="assists">Assists</option>
+                                <option value="bench_points">Bench Points</option>
+                                <option value="biggest_scoring_run">Biggest Scoring Run</option>
+                                <option value="blocks">Blocks</option>
+                                <option value="field_goals_fraction">Field Goals</option>
+                                <option value="field_goal_percentage">FG%</option>
+                                <option value="fouls_personal">Personal Fouls</option>
+                                <option value="fouls_team">Team Fouls</option>
+                                <option value="free_throws_percentage">FT%</option>
+                                <option value="free_throws_fraction">Free Throws</option>
+                                <option value="offensive_rebounds">Offensive Rebounds</option>
+                                <option value="points_fast_break">Fast Break Points</option>
+                                <option disabled value="points_in_the_paint_made">Points in the Paint</option>
+                                <option value="rebounds_total">Rebounds</option>
+                                <option value="steals">Steals</option>
+                                <option value="three_pointers_percentage">3FG%</option>
+                                <option value="three_pointers_fraction">Three Pointers</option>
+                                <option value="time_leading">Time Leading</option>
+                                <option value="turnovers">Turnovers</option>
+                            </select>
+                            <AnimToggleButton animName="Comp Stat">PLAY</AnimToggleButton>
                         </Row>
                     </Container>
                 </Card>

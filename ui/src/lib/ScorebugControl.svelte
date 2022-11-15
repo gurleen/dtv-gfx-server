@@ -31,7 +31,7 @@ import {store} from '../util/livestore.js'
                             Home LTH: {$store.homePlayerNum}
                         </Row>
                         <Row>
-                            <Input number bind:value={$store.homePlayerNum} />
+                            <Input number on:change={(e) => store.update({homePlayerNum: String(e.target.value)})} />
                             <AnimToggleButton animName="Home Player Stats">PLAY</AnimToggleButton>
                         </Row>
                     </Container>

@@ -16,7 +16,7 @@ function updateAway(e) {
 }
 
 let compStatValue = ""
-$: {
+function updateComp() {
     store.update({compStat: compStatValue})
     emit("run_comp_update")
 }
@@ -65,7 +65,7 @@ $: {
                     <Container>
                         <Row>
                             Comparison Stat
-                            <select bind:value={compStatValue}>
+                            <select bind:value={compStatValue} on:change={updateComp}>
                                 <option value="assists">Assists</option>
                                 <option value="bench_points">Bench Points</option>
                                 <option value="biggest_scoring_run">Biggest Scoring Run</option>

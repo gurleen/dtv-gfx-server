@@ -21,7 +21,7 @@ stats = NCAALiveStats()
 
 async def read_live_stats(queue: asyncio.Queue, params: dict):
     LISTENERS = {
-        "boxscore": [update_home_player]
+        "boxscore": [update_home_player, update_away_player]
     }
 
     logger.info("Running NCAA Live Stats listener")
@@ -97,6 +97,11 @@ async def update_away_player(game: Game):
 @sio.event
 async def run_home_update(_):
     await update_home_player(stats._game)
+
+
+@sio.event
+async def run_away_update(_):
+    await update_away_player(stats._game)
 
 
 @sio.event

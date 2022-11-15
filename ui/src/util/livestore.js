@@ -16,7 +16,8 @@ export function emit(eventName, ...params) {
 function createLiveStore() {
     const { subscribe, set, update } = writable({
         bugFlying: false,
-        clock: "0"
+        clock: "0",
+        homePlayerNum: "0"
     })
 
     return {

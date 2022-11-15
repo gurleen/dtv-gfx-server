@@ -34,3 +34,9 @@ async def connect(sid, _):
 async def store_update(sid, payload: dict):
     await store_patch(payload)
     logger.debug(f"Client {sid} sent patch: {payload}")
+
+
+@sio.event
+async def play_anim(sid, payload: dict):
+    logger.debug(f"Client {sid} played anim {payload['anim']}")
+    await sio.emit("run_anim", payload)

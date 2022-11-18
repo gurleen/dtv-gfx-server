@@ -18,7 +18,9 @@ function createLiveStore() {
         bugFlying: false,
         clock: "0",
         homePlayerNum: "0",
-        awayPlayerNum: "0"
+        awayPlayerNum: "0",
+        textSliderTitle: "",
+        textSliderSubtitle: ""
     })
 
     return {

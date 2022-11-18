@@ -4,6 +4,7 @@ import {Container, Row, Col, Button, Card, Input} from 'svelte-chota'
 import ToggleButton from './components/ToggleButton.svelte'
 import {store, emit} from '../util/livestore.js'
   import AnimToggleButton from './components/AnimToggleButton.svelte';
+  import LiveKey from './components/LiveKey.svelte';
 
 function updateHome(e) {
     store.update({homePlayerNum: String(e.target.value)})
@@ -19,6 +20,18 @@ let compStatValue = ""
 function updateComp() {
     store.update({compStat: compStatValue})
     emit("run_comp_update")
+}
+
+let textSliderPresets = [
+    {title: "COMMENTATORS", subtitle: "ROB BROOKS & MIKE TUBEROSA"},
+    {title: "OFFICIALS", subtitle: "OFFICIAL 1, OFFICIAL 2, OFFICIAL 3"},
+    {title: "VENUE", subtitle: "DASKALAKIS ATHLETIC CENTER, PHILADELPHIA"}
+]
+
+let currentPreset = {title: "", subtitle: ""}
+
+function setPreset() {
+    store.update({textSliderTitle: currentPreset.title, textSliderSubtitle: currentPreset.subtitle})
 }
 </script>
 
@@ -88,6 +101,31 @@ function updateComp() {
                             </select>
                             <Button on:click={updateComp}>UPDATE</Button>
                             <AnimToggleButton animName="Comp Stat">PLAY</AnimToggleButton>
+                        </Row>
+                    </Container>
+                </Card>
+                <Card class="is-center" style="margin-top: 5px;">
+                    <Container>
+                        <Row>
+                            Text Slider
+                        </Row>
+                        <Row>
+                            <select bind:value={currentPreset}>
+                                {#each textSliderPresets as preset}
+                                    <option value={preset}>{preset.title} - {preset.subtitle}</option>
+                                {/each}
+                            </select>
+                            <Button on:click={setPreset}>Set Preset</Button>
+                        </Row>
+                        <Row>
+                            <LiveKey key="textSliderTitle" />
+                        </Row>
+                        <Row>
+                            <LiveKey key="textSliderSubtitle" />
+                        </Row>
+                        <Row>
+                            <AnimToggleButton animName="Text Slider Content Change">Update Text</AnimToggleButton>
+                            <AnimToggleButton animName="Text Slider">PLAY</AnimToggleButton>
                         </Row>
                     </Container>
                 </Card>

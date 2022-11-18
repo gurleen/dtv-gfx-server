@@ -27,7 +27,7 @@ async def read_live_stats(queue: asyncio.Queue, params: dict):
 
     logger.info("Running NCAA Live Stats listener")
 
-    reader, writer = await asyncio.open_connection("10.250.37.65", 7677)
+    reader, writer = await asyncio.open_connection("10.250.37.65", 7677, limit=1024 * 256)
 
     writer.write(FORMATTED_PARAMS)
     await writer.drain()
@@ -99,7 +99,7 @@ async def update_comp_stat(game: Game):
     stat = STORE.get("compStat", "assists")
     home_stat = getattr(game.home_team.game_stats, stat)
     away_stat = getattr(game.away_team.game_stats, stat)
-    if home_stat and away_stat:
+    if home_stat  and away_stat:
         payload = {
             "compStatTitle": STAT_NAMES.get(stat, ""),
             "compStatLine": f"DREXEL: {home_stat}     PENN: {away_stat}"

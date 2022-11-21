@@ -1,6 +1,7 @@
 import asyncio
 import json
 
+import aiofiles
 from app import sio, queue
 from store import STORE
 from loguru import logger
@@ -15,6 +16,8 @@ PARAMS = {
 }
 
 FORMATTED_PARAMS = json.dumps(PARAMS).encode()
+
+LIVETEXT_PATH = "."
 
 
 stats = NCAALiveStats()
@@ -134,3 +137,26 @@ async def export_stat_line():
         line += p_line + " --- "
     
     return line
+
+
+@sio.event
+async def export_half_stats():
+    global stats
+    home = stats._game.home_team.game_stats
+    away = stats._game.away_team.game_stats
+    items = {
+        "homeTeamFG": home.field_goals_fraction,
+        "homeTeam3FG": home.three_points_fraction,
+        "homeTeamFT": home.free_throws_fraction,
+        "homeTeamTO": home.turnovers,
+        "homeTeamREB": home.rebounds_total,
+        "awayTeamFG": away.field_goals_fraction,
+        "awayTeam3FG": away.three_points_fraction,
+        "awayTeamFT": away.free_throws_fraction,
+        "awayTeamTO": away.turnovers,
+        "awayTeamREB": away.rebounds_total
+    }
+
+    with aiofiles.open(f"{LIVETEXT_PATH}/halfstats.txt", mode="w") as f:
+        for k, v in items.items():
+            await f.write(f"{k}={v}\n")

@@ -8,6 +8,7 @@ from loguru import logger
 from .stat_names import STAT_NAMES
 from ncaa_live_stats import NCAALiveStats, Game
 from ncaa_live_stats.compose.player import compose_player_statline
+from ncaa_live_stats.structs import ActionType
 
 PARAMS = {
     "type": "parameters",
@@ -25,7 +26,8 @@ stats = NCAALiveStats()
 
 async def read_live_stats(queue: asyncio.Queue, params: dict):
     LISTENERS = {
-        "boxscore": [update_home_player, update_away_player, update_comp_stat]
+        "boxscore": [update_home_player, update_away_player, update_comp_stat],
+        "action": [track_scoring_drought]
     }
 
     logger.info("Running NCAA Live Stats listener")
@@ -66,6 +68,16 @@ def get_starters(game: Game):
 
 
 stats.add_listener("teams", get_starters)
+
+
+def track_scoring_drought(game: Game):
+    last_action = game.actions[-1]
+    if last_action.is_scoring_play:
+        team = last_action.get_team(game)
+        side = "home" if team.is_home else "away"
+        STORE[f"{side}LastScore"] = last_action.clock_norm
+        if last_action.action_type != ActionType.FREETHROW:
+            STORE[f"{side}LastFG"] = last_action.clock_norm
 
 
 async def update_home_player(game: Game):

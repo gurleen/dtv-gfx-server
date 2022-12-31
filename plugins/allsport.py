@@ -31,6 +31,10 @@ def parse_line_for_sport(line: str, sport: str) -> dict[str, str]:
     return parsed_values
 
 
+def update_droughts(parsed_values: dict) -> dict:
+    pass
+
+
 def package_payload(parsed_values: dict) -> dict:
     return {"payload": parsed_values, "sender": "AllSport CG Plugin"}
 

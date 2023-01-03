@@ -7,6 +7,9 @@ import serial_asyncio
 from loguru import logger
 
 from itertools import cycle
+from datetime import timedelta
+
+from store import STORE, store_patch
 
 
 ALLSPORT_LINE_MAPS = {
@@ -31,9 +34,22 @@ def parse_line_for_sport(line: str, sport: str) -> dict[str, str]:
     return parsed_values
 
 
-def update_droughts(parsed_values: dict) -> dict:
-    pass
+def time_string_to_timedelta(time: str) -> timedelta:
+    minutes, seconds = time.split(":")
+    return timedelta(minutes=int(minutes), seconds=int(seconds))
 
+
+def compare_timedeltas(td_1: timedelta, td_2: timedelta) -> str:
+    return str(td_1 - td_2)[:-3]
+
+
+def update_droughts(parsed_values: dict) -> dict:
+    clock = parsed_values["clock"]
+    for key in ["homeLastScore", "homeLastFG", "awayLastScore", "awayLastFG"]:
+        value = STORE.get(key)
+        new_key = f"{key}Drought"
+        new_value = compare_timedeltas(time_string_to_timedelta(clock), time_string_to_timedelta(value))
+        store_patch({new_key: new_value})
 
 def package_payload(parsed_values: dict) -> dict:
     return {"payload": parsed_values, "sender": "AllSport CG Plugin"}

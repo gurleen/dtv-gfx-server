@@ -34,6 +34,9 @@ def init_tasks(tasks: list[dict], queue: asyncio.Queue):
         if is_import_only:
             try:
                 import_module(coroutine_name)
+            except Exception as e:
+                logger.error(f"Could not import plugin {name}.")
+                logger.error(f"Error: {e}")
             finally:
                 continue
 

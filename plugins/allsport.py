@@ -34,22 +34,23 @@ def parse_line_for_sport(line: str, sport: str) -> dict[str, str]:
     return parsed_values
 
 
-def time_string_to_timedelta(time: str) -> timedelta:
+def time_to_secs(time: str) -> timedelta:
     minutes, seconds = time.split(":")
-    return timedelta(minutes=int(minutes), seconds=int(seconds))
+    return 60*int(minutes) + int(seconds)
 
 
-def compare_timedeltas(td_1: timedelta, td_2: timedelta) -> str:
-    return str(td_1 - td_2)[:-3]
+def seconds_to_time_str(seconds: int) -> str:
+    m, s = divmod(seconds, 60)
+    return f"{m}:{s:02d}"
 
 
-def update_droughts(parsed_values: dict) -> dict:
+async def update_droughts(parsed_values: dict) -> dict:
     clock = parsed_values["clock"]
     for key in ["homeLastScore", "homeLastFG", "awayLastScore", "awayLastFG"]:
         value = STORE.get(key)
         new_key = f"{key}Drought"
-        new_value = compare_timedeltas(time_string_to_timedelta(clock), time_string_to_timedelta(value))
-        store_patch({new_key: new_value})
+        new_value = seconds_to_time_str(time_to_secs(clock) - time_to_secs(value))
+        await store_patch({new_key: new_value})
 
 def package_payload(parsed_values: dict) -> dict:
     return {"payload": parsed_values, "sender": "AllSport CG Plugin"}
@@ -66,6 +67,10 @@ async def read_allsport_cg(queue: asyncio.Queue, params: dict):
             decoded_line = line.decode("ascii").lstrip("\x01")
             parsed_values = parse_line_for_sport(decoded_line, sport)
             payload = package_payload(parsed_values)
+            try:
+                await update_droughts(parsed_values)
+            except Exception:
+                logger.error("Failed to update scoring droughts.")
             await queue.put(payload)
     except asyncio.CancelledError as e:
         traceback.print_exc()

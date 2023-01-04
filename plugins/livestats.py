@@ -32,7 +32,7 @@ async def read_live_stats(queue: asyncio.Queue, params: dict):
 
     logger.info("Running NCAA Live Stats listener")
 
-    reader, writer = await asyncio.open_connection("10.250.37.65", 7677, limit=1024 * 256)
+    reader, writer = await asyncio.open_connection(params["host"], params["port"], limit=1024 * 256)
 
     writer.write(FORMATTED_PARAMS)
     await writer.drain()

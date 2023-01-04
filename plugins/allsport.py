@@ -59,7 +59,7 @@ def package_payload(parsed_values: dict) -> dict:
 async def read_allsport_cg(queue: asyncio.Queue, params: dict):
     logger.info("Running AllSport CG Reader.")
     port = params.get("port", "COM3")
-    sport = params.get("sport", "soccer")
+    sport = params.get("sport", "basketball")
     reader, _ = await serial_asyncio.open_serial_connection(url=port)
     try:
         while True:

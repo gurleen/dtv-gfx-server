@@ -70,6 +70,22 @@ function setPreset() {
                             <Input number on:change={updateAway} />
                             <AnimToggleButton animName="Away Player Stats">PLAY</AnimToggleButton>
                         </Row>
+                        <Row>
+                            Home Trend:
+                            <select on:change={(e) => store.update({homeTrend: e.target.value})}>
+                                <option value="homeScoringDrought">Scoring Drought</option>
+                                <option value="homeFGDrought">FG Drought</option>
+                            </select>
+                            <AnimToggleButton animName="Home Trend">PLAY</AnimToggleButton>
+                        </Row>
+                        <Row>
+                            Away Trend:
+                            <select on:change={(e) => store.update({awayTrend: e.target.value})}>
+                                <option value="awayScoringDrought">Scoring Drought</option>
+                                <option value="awayFGDrought">FG Drought</option>
+                            </select>
+                            <AnimToggleButton animName="Away Trend">PLAY</AnimToggleButton>
+                        </Row>
                     </Container>
                 </Card>
             </Col>

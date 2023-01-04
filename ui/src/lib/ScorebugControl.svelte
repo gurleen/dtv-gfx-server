@@ -73,16 +73,16 @@ function setPreset() {
                         <Row>
                             Home Trend:
                             <select on:change={(e) => store.update({homeTrend: e.target.value})}>
-                                <option value="homeScoringDrought">Scoring Drought</option>
-                                <option value="homeFGDrought">FG Drought</option>
+                                <option value="homeLastScoreDrought">Scoring Drought</option>
+                                <option value="homeLastFGDrought">FG Drought</option>
                             </select>
                             <AnimToggleButton animName="Home Trend">PLAY</AnimToggleButton>
                         </Row>
                         <Row>
                             Away Trend:
                             <select on:change={(e) => store.update({awayTrend: e.target.value})}>
-                                <option value="awayScoringDrought">Scoring Drought</option>
-                                <option value="awayFGDrought">FG Drought</option>
+                                <option value="awayLastScoreDrought">Scoring Drought</option>
+                                <option value="awayLastFGDrought">FG Drought</option>
                             </select>
                             <AnimToggleButton animName="Away Trend">PLAY</AnimToggleButton>
                         </Row>

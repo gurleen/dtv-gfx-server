@@ -14,6 +14,8 @@ STORE = {
     "homeLastFG": "14:00",
     "awayLastScore": "15:00",
     "awayLastFG": "14:00",
+    "homeTrend": "homeLastScore",
+    "awayTrend": "awayLastScore"
 }
 
 

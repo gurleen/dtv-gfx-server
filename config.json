@@ -13,6 +13,11 @@
             "name": "Nexrender",
             "coroutine": "plugins.nexrender",
             "importOnly": true
+        },
+        {
+            "name": "CAA Out of Town Scores",
+            "coroutine": "plugins.outoftown.run",
+            "params": {}
         }
     ],
     "disabled": [

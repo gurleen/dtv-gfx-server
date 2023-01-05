@@ -20,7 +20,8 @@ function createLiveStore() {
         homePlayerNum: "0",
         awayPlayerNum: "0",
         textSliderTitle: "",
-        textSliderSubtitle: ""
+        textSliderSubtitle: "",
+        caa_games: []
     })
 
     return {

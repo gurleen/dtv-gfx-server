@@ -59,6 +59,17 @@ async def update_droughts(parsed_values: dict) -> dict:
         await store_patch({new_key: f"{prefix} {new_value}"})
 
 
+async def update_droughts(parsed_values: dict):
+    clock = parsed_values["clock"]
+    for side in ["home", "away"]:
+        selected_trend = STORE.get(f"{side}Trend")
+        prefix = "NO FGs LAST" if "FG" in selected_trend else "SCORING DROUGHT"
+        value = STORE.get(selected_trend)
+        new_value = seconds_to_time_str(time_to_secs(value) - time_to_secs(clock))
+        await store_patch({f"{side}TrendText": f"{prefix} {new_value}"})
+    
+
+
 def package_payload(parsed_values: dict) -> dict:
     return {"payload": parsed_values, "sender": "AllSport CG Plugin"}
 
@@ -89,20 +100,22 @@ async def mock_allsport_cg(queue: asyncio.Queue, params: dict):
     home_score, away_score = 0, 0
     while True:
         m, s = divmod(clock, 60)
+        clock_str = f"{m}:{s:02d}"
         await queue.put(
-            {"sender": "Mock AllSport CG", "payload": {"clock": f"{m}:{s:02d}"}}
+            {"sender": "Mock AllSport CG", "payload": {"clock": clock_str}}
         )
+        await update_droughts({"clock": clock_str})
         clock -= 1
         if clock <= 0:
             clock = 600
 
         if random.random() > 0.90:
-            home_score += 2
+            home_score += random.choice((2, 3))
             await queue.put(
                 {"sender": "Mock AllSport CG", "payload": {"homeScore": home_score}}
             )
         if random.random() > 0.90:
-            away_score += 2
+            away_score += random.choice((2, 3))
             await queue.put(
                 {"sender": "Mock AllSport CG", "payload": {"awayScore": away_score}}
             )

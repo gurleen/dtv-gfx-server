@@ -73,16 +73,16 @@ function setPreset() {
                         <Row>
                             Home Trend:
                             <select on:change={(e) => store.update({homeTrend: e.target.value})}>
-                                <option value="homeLastScoreDrought">Scoring Drought</option>
-                                <option value="homeLastFGDrought">FG Drought</option>
+                                <option value="homeLastScore">Scoring Drought</option>
+                                <option value="homeLastFG">FG Drought</option>
                             </select>
                             <AnimToggleButton animName="Home Trend">PLAY</AnimToggleButton>
                         </Row>
                         <Row>
                             Away Trend:
                             <select on:change={(e) => store.update({awayTrend: e.target.value})}>
-                                <option value="awayLastScoreDrought">Scoring Drought</option>
-                                <option value="awayLastFGDrought">FG Drought</option>
+                                <option value="awayLastScore">Scoring Drought</option>
+                                <option value="awayLastFG">FG Drought</option>
                             </select>
                             <AnimToggleButton animName="Away Trend">PLAY</AnimToggleButton>
                         </Row>
@@ -142,6 +142,28 @@ function setPreset() {
                         <Row>
                             <AnimToggleButton animName="Text Slider Content Change">Update Text</AnimToggleButton>
                             <AnimToggleButton animName="Text Slider">PLAY</AnimToggleButton>
+                        </Row>
+                    </Container>
+                </Card>
+            </Col>
+        </Row>
+        <Row>
+            <Col size="5">
+                <Card class="is-center">
+                    <Container>
+                        <Row>
+                            <h4>CAA Out of Town Scoreboard</h4>
+                        </Row>
+                        <Row>
+                            <AnimToggleButton animName="Out of Town Score">PLAY</AnimToggleButton>
+                        </Row>
+                        <Row>
+                            <select on:change={(e) => store.update({ootGame: $store.caa_games[e.target.value]})}>
+                                {#each $store.caa_games as game, index}
+                                    <option value={index}>{game.awayName} @ {game.homeName}</option>
+                                {/each}
+                            </select>
+                            <AnimToggleButton animName="Out of Town Score Change">UPDATE</AnimToggleButton>
                         </Row>
                     </Container>
                 </Card>

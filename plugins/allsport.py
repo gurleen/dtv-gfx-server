@@ -50,7 +50,7 @@ async def update_droughts(parsed_values: dict) -> dict:
         value = STORE.get(key)
         new_key = f"{key}Drought"
         prefix = "NO FGs LAST" if "FG" in key else "SCORING DROUGHT"
-        new_value = seconds_to_time_str(time_to_secs(clock) - time_to_secs(value))
+        new_value = seconds_to_time_str(time_to_secs(value) - time_to_secs(clock))
         await store_patch({new_key: f"{prefix} {new_value}"})
 
 def package_payload(parsed_values: dict) -> dict:

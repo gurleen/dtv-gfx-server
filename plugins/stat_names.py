@@ -17,5 +17,5 @@ STAT_NAMES = {
     "three_pointers_percentage": "3FG%",
     "three_pointers_fraction": "Three Pointers",
     "time_leading": "Time Leading",
-    "turnovers": "Turnovers"
+    "turnovers": "Turnovers",
 }

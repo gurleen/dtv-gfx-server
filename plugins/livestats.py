@@ -27,12 +27,14 @@ stats = NCAALiveStats()
 async def read_live_stats(queue: asyncio.Queue, params: dict):
     LISTENERS = {
         "boxscore": [update_home_player, update_away_player, update_comp_stat],
-        "action": [track_scoring_drought]
+        "action": [track_scoring_drought],
     }
 
     logger.info("Running NCAA Live Stats listener")
 
-    reader, writer = await asyncio.open_connection(params["host"], params["port"], limit=1024 * 256)
+    reader, writer = await asyncio.open_connection(
+        params["host"], params["port"], limit=1024 * 256
+    )
 
     writer.write(FORMATTED_PARAMS)
     await writer.drain()
@@ -89,7 +91,7 @@ async def update_home_player(game: Game):
         "homePlayerName": player.full_name.upper(),
         "homePlayerPos": player.position,
         "homePlayerShirt": player.shirt,
-        "homePlayerLine": line
+        "homePlayerLine": line,
     }
 
     await queue.put({"sender": "NCAA Live Stats", "payload": payload})
@@ -104,7 +106,7 @@ async def update_away_player(game: Game):
         "awayPlayerName": player.full_name.upper(),
         "awayPlayerPos": player.position,
         "awayPlayerShirt": player.shirt,
-        "awayPlayerLine": line
+        "awayPlayerLine": line,
     }
 
     await queue.put({"sender": "NCAA Live Stats", "payload": payload})
@@ -114,13 +116,14 @@ async def update_comp_stat(game: Game):
     stat = STORE.get("compStat", "assists")
     home_stat = getattr(game.home_team.game_stats, stat)
     away_stat = getattr(game.away_team.game_stats, stat)
-    if home_stat  and away_stat:
+    if home_stat and away_stat:
         payload = {
             "compStatTitle": STAT_NAMES.get(stat, ""),
-            "compStatLine": f"DREXEL: {home_stat}     PENN: {away_stat}"
+            "compStatLine": f"DREXEL: {home_stat}     PENN: {away_stat}",
         }
 
         await queue.put({"sender": "NCAA Live Stats", "payload": payload})
+
 
 @sio.event
 async def run_home_update(_):
@@ -141,13 +144,21 @@ async def run_comp_update(_):
 async def export_stat_line():
     global stats
     line = str()
-    top_five_home = sorted(stats._game.home_team.players.values(), key=lambda p: p.stats.points, reverse=True)[:5]
-    top_five_away = sorted(stats._game.away_team.players.values(), key=lambda p: p.stats.points, reverse=True)[:5] 
+    top_five_home = sorted(
+        stats._game.home_team.players.values(),
+        key=lambda p: p.stats.points,
+        reverse=True,
+    )[:5]
+    top_five_away = sorted(
+        stats._game.away_team.players.values(),
+        key=lambda p: p.stats.points,
+        reverse=True,
+    )[:5]
     for player in [*top_five_home, *top_five_away]:
         stats = player.stats
         p_line = f"#{player.shirt} {player.last_name.capitalize()}: {stats.points} PTS, {stats.assists} AST, {stats.rebounds_total} REB"
         line += p_line + " --- "
-    
+
     return line
 
 
@@ -166,7 +177,7 @@ async def export_half_stats():
         "awayTeam3FG": away.three_points_fraction,
         "awayTeamFT": away.free_throws_fraction,
         "awayTeamTO": away.turnovers,
-        "awayTeamREB": away.rebounds_total
+        "awayTeamREB": away.rebounds_total,
     }
 
     with aiofiles.open(f"{LIVETEXT_PATH}/halfstats.txt", mode="w") as f:

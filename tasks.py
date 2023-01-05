@@ -63,8 +63,7 @@ def get_tasks_status() -> dict[str, bool]:
     stopped = [
         {"name": task["name"], "running": False}
         for task in task_list
-        if task["name"] not in running_task_names
-        and not task["importOnly"]
+        if task["name"] not in running_task_names and not task["importOnly"]
     ]
     return [*running, *stopped]
 

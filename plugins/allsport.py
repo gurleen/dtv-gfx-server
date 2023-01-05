@@ -14,7 +14,12 @@ from store import STORE, store_patch
 
 ALLSPORT_LINE_MAPS = {
     "soccer": {"clock": (0, 5), "home_score": (25, 27), "away_score": (27, 29)},
-    "basketball": {"clock": (0, 5), "homeScore": (13, 15), "awayScore": (15, 18), "shotClock": (8, 10)}
+    "basketball": {
+        "clock": (0, 5),
+        "homeScore": (13, 15),
+        "awayScore": (15, 18),
+        "shotClock": (8, 10),
+    },
 }
 
 
@@ -36,7 +41,7 @@ def parse_line_for_sport(line: str, sport: str) -> dict[str, str]:
 
 def time_to_secs(time: str) -> timedelta:
     minutes, seconds = time.split(":")
-    return 60*int(minutes) + int(seconds)
+    return 60 * int(minutes) + int(seconds)
 
 
 def seconds_to_time_str(seconds: int) -> str:
@@ -52,6 +57,7 @@ async def update_droughts(parsed_values: dict) -> dict:
         prefix = "NO FGs LAST" if "FG" in key else "SCORING DROUGHT"
         new_value = seconds_to_time_str(time_to_secs(value) - time_to_secs(clock))
         await store_patch({new_key: f"{prefix} {new_value}"})
+
 
 def package_payload(parsed_values: dict) -> dict:
     return {"payload": parsed_values, "sender": "AllSport CG Plugin"}
@@ -83,15 +89,21 @@ async def mock_allsport_cg(queue: asyncio.Queue, params: dict):
     home_score, away_score = 0, 0
     while True:
         m, s = divmod(clock, 60)
-        await queue.put({"sender": "Mock AllSport CG", "payload": {"clock": f"{m}:{s:02d}"}})
+        await queue.put(
+            {"sender": "Mock AllSport CG", "payload": {"clock": f"{m}:{s:02d}"}}
+        )
         clock -= 1
         if clock <= 0:
             clock = 600
 
-        if random.random() > .90:
+        if random.random() > 0.90:
             home_score += 2
-            await queue.put({"sender": "Mock AllSport CG", "payload": {"homeScore": home_score}})
-        if random.random() > .90:
+            await queue.put(
+                {"sender": "Mock AllSport CG", "payload": {"homeScore": home_score}}
+            )
+        if random.random() > 0.90:
             away_score += 2
-            await queue.put({"sender": "Mock AllSport CG", "payload": {"awayScore": away_score}})
+            await queue.put(
+                {"sender": "Mock AllSport CG", "payload": {"awayScore": away_score}}
+            )
         await asyncio.sleep(1)

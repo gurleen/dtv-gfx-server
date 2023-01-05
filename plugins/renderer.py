@@ -22,8 +22,16 @@ AERENDER_COMMAND = """
 """
 
 
-def get_render_command(project: str, comp: str, start_frame: int, end_frame: int, output: str, **kwargs) -> str:
-    return AERENDER_COMMAND.format(project=project, comp=comp, start_frame=start_frame, end_frame=end_frame, output=output)
+def get_render_command(
+    project: str, comp: str, start_frame: int, end_frame: int, output: str, **kwargs
+) -> str:
+    return AERENDER_COMMAND.format(
+        project=project,
+        comp=comp,
+        start_frame=start_frame,
+        end_frame=end_frame,
+        output=output,
+    )
 
 
 async def execute_aerender(command: str, frames: int, id: int):
@@ -38,8 +46,13 @@ async def execute_aerender(command: str, frames: int, id: int):
                 line = line.decode("ascii")
                 p_open, p_close = line.index("("), line.index(")")
                 frame = int(line[p_open + 1 : p_close])
-                progress = (frame / frames)
-                await queue.put({"payload": {f"render_job_{id}_progress": progress}, "sender": "AERender"})
+                progress = frame / frames
+                await queue.put(
+                    {
+                        "payload": {f"render_job_{id}_progress": progress},
+                        "sender": "AERender",
+                    }
+                )
             except:
                 progress = 0
     except asyncio.TimeoutError:

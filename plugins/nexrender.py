@@ -13,7 +13,7 @@ async def run_render(preset: dict):
     template_str = json.dumps(preset)
     command = f"nexrender-cli '{template_str}'"
     args = shlex.split(command)
-    
+
     proc = await asyncio.create_subprocess_exec(*args, stdout=asyncio.subprocess.PIPE)
     code = await proc.wait()
     print(f"nexrender exited with code {code}")

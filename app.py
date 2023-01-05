@@ -20,6 +20,7 @@ queue = asyncio.Queue()
 app.router.add_static("/", "./dashboard", show_index=True)
 # app.router.add_static("/gfx", "./static", show_index=True)
 
+
 def setup_web_runner(loop):
     runner = web.AppRunner(app)
     loop.run_until_complete(runner.setup())

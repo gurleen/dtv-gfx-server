@@ -14,8 +14,9 @@ def normalize_game_data(game: dict) -> dict:
         "awayScore": game["away"]["score"],
         "startTime": game["startTime"],
         "period": game["currentPeriod"],
+        "clock": game["contestClock"],
         "homeLogo": LOGO_URL_FORMAT.format(school=game["home"]["names"]["seo"]),
-        "awayLogo": LOGO_URL_FORMAT.format(school=game["away"]["names"]["seo"])
+        "awayLogo": LOGO_URL_FORMAT.format(school=game["away"]["names"]["seo"]),
     }
 
 
@@ -30,13 +31,13 @@ def filter_games_by_conf(ncaa_json: dict, conf: str) -> list[dict]:
 def get_ncaa_json(sport: str = "basketball-men") -> dict:
     today = datetime.today()
     url = f"https://data.ncaa.com/casablanca/scoreboard/{sport}/d1/{today.year}/{today.month:02d}/{today.day:02d}/scoreboard.json"
-    url = f"https://data.ncaa.com/casablanca/scoreboard/{sport}/d1/2023/01/01/scoreboard.json"
+    # url = f"https://data.ncaa.com/casablanca/scoreboard/{sport}/d1/2023/01/01/scoreboard.json"
     req = requests.get(url)
     return req.json()
 
 
 def main():
-    json = get_ncaa_json(sport="basketball-women")
+    json = get_ncaa_json(sport="basketball-men")
     caa = filter_games_by_conf(json, "CAA")
     caa_norm = [normalize_game_data(g) for g in caa]
     pprint(caa_norm)

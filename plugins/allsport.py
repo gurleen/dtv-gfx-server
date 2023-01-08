@@ -5,6 +5,7 @@ import random
 import traceback
 import serial_asyncio
 from loguru import logger
+import aiofiles
 
 from itertools import cycle
 from datetime import timedelta
@@ -21,6 +22,8 @@ ALLSPORT_LINE_MAPS = {
         "shotClock": (8, 10),
     },
 }
+
+LIVETEXT_FILE = "livetext.txt"
 
 
 def print_debug_numbers(line: str):
@@ -49,16 +52,6 @@ def seconds_to_time_str(seconds: int) -> str:
     return f"{m}:{s:02d}"
 
 
-async def update_droughts(parsed_values: dict) -> dict:
-    clock = parsed_values["clock"]
-    for key in ["homeLastScore", "homeLastFG", "awayLastScore", "awayLastFG"]:
-        value = STORE.get(key)
-        new_key = f"{key}Drought"
-        prefix = "NO FGs LAST" if "FG" in key else "SCORING DROUGHT"
-        new_value = seconds_to_time_str(time_to_secs(value) - time_to_secs(clock))
-        await store_patch({new_key: f"{prefix} {new_value}"})
-
-
 async def update_droughts(parsed_values: dict):
     clock = parsed_values["clock"]
     for side in ["home", "away"]:
@@ -74,6 +67,12 @@ def package_payload(parsed_values: dict) -> dict:
     return {"payload": parsed_values, "sender": "AllSport CG Plugin"}
 
 
+async def write_to_livetext(parsed_values: dict):
+    async with aiofiles.open(LIVETEXT_FILE, "w") as f:
+        for k, v in parsed_values.items():
+            await f.write(f"{k}={v}")
+
+
 async def read_allsport_cg(queue: asyncio.Queue, params: dict):
     logger.info("Running AllSport CG Reader.")
     port = params.get("port", "COM3")
@@ -85,6 +84,7 @@ async def read_allsport_cg(queue: asyncio.Queue, params: dict):
             decoded_line = line.decode("ascii").lstrip("\x01")
             parsed_values = parse_line_for_sport(decoded_line, sport)
             payload = package_payload(parsed_values)
+            await write_to_livetext(parsed_values)
             try:
                 await update_droughts(parsed_values)
             except Exception:

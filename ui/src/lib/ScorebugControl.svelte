@@ -57,6 +57,13 @@ function setPreset() {
                 <Card class="is-center">
                     <Container>
                         <Row>
+                            Select sport:
+                            <select on:change={(e) => store.update({sport: e.target.value})}>
+                                <option value="mbb">Men's Basketball</option>
+                                <option value="wbb">Women's Basketball</option>
+                            </select>
+                        </Row>
+                        <Row>
                             Home LTH: {$store.homePlayerNum}
                         </Row>
                         <Row>

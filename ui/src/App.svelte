@@ -3,18 +3,19 @@
 import {Container, Nav, Row, Col, Button, Modal, Card, Input} from 'svelte-chota'
 import logo from './assets/DrexelDragonsAlt.png'
 import AfterEffects from './lib/AfterEffects.svelte';
-  import Nexrender from './lib/Nexrender.svelte';
+import Nexrender from './lib/Nexrender.svelte';
 import Plugins from './lib/Plugins.svelte';
 import ScorebugControl from './lib/ScorebugControl.svelte';
-  import Stats from './lib/Stats.svelte';
-
+import Stats from './lib/Stats.svelte';
+import Wrestling from './lib/Wrestling.svelte';
 
 
 const TABS = {
     "Scorebug": ScorebugControl,
     "After Effects": Nexrender,
     "Plugins": Plugins,
-    "Stats": Stats
+    "Stats": Stats,
+    "Wrestling": Wrestling
 }
 
 let selectedTab = "Scorebug"

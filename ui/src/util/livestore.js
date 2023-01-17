@@ -21,7 +21,9 @@ function createLiveStore() {
         awayPlayerNum: "0",
         textSliderTitle: "",
         textSliderSubtitle: "",
-        caa_games: []
+        caa_games: [],
+        homeScore: "0",
+        awayScore: "0"
     })
 
     return {
@@ -49,7 +51,6 @@ function createLiveStore() {
                 console.log("After patch", s)
                 return s
             })
-            
         }
     }
 }

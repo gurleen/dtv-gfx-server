@@ -14,12 +14,19 @@ from store import STORE, store_patch
 
 
 ALLSPORT_LINE_MAPS = {
-    "soccer": {"clock": (0, 5), "home_score": (25, 27), "away_score": (27, 29)},
+    "soccer": {
+        "clock": (0, 5),
+        "home_score": (25, 27),
+        "away_score": (27, 29)
+    },
     "basketball": {
         "clock": (0, 5),
         "homeScore": (13, 15),
         "awayScore": (15, 18),
         "shotClock": (8, 10),
+    },
+    "clock_only": {
+        "clock": (0, 5)
     },
 }
 
@@ -60,7 +67,6 @@ async def update_droughts(parsed_values: dict):
         value = STORE.get(selected_trend)
         new_value = seconds_to_time_str(time_to_secs(value) - time_to_secs(clock))
         await store_patch({f"{side}TrendText": f"{prefix} {new_value}"})
-    
 
 
 def package_payload(parsed_values: dict) -> dict:
@@ -77,6 +83,7 @@ async def read_allsport_cg(queue: asyncio.Queue, params: dict):
     logger.info("Running AllSport CG Reader.")
     port = params.get("port", "COM3")
     sport = params.get("sport", "basketball")
+    LIVETEXT_FILE = params.get("livetext_file", "livetext.txt")
     reader, _ = await serial_asyncio.open_serial_connection(url=port)
     try:
         while True:
@@ -101,14 +108,12 @@ async def mock_allsport_cg(queue: asyncio.Queue, params: dict):
     while True:
         m, s = divmod(clock, 60)
         clock_str = f"{m}:{s:02d}"
-        await queue.put(
-            {"sender": "Mock AllSport CG", "payload": {"clock": clock_str}}
-        )
+        await queue.put({"sender": "Mock AllSport CG", "payload": {"clock": clock_str}})
         await update_droughts({"clock": clock_str})
         clock -= 1
         if clock <= 0:
             clock = 600
-
+        """
         if random.random() > 0.90:
             home_score += random.choice((2, 3))
             await queue.put(
@@ -119,4 +124,5 @@ async def mock_allsport_cg(queue: asyncio.Queue, params: dict):
             await queue.put(
                 {"sender": "Mock AllSport CG", "payload": {"awayScore": away_score}}
             )
+        """
         await asyncio.sleep(1)

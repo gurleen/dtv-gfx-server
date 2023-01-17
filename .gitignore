@@ -161,3 +161,4 @@ cython_debug/
 .nova
 dashboard/*
 .DS_Store
+./config.json

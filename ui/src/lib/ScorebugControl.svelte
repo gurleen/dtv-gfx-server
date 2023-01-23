@@ -122,6 +122,7 @@ function setPreset() {
                                 <option value="time_leading">Time Leading</option>
                                 <option value="turnovers">Turnovers</option>
                             </select>
+                            <p>${store.compStatTile} // ${store.compStatLine}</p>
                             <Button on:click={updateComp}>UPDATE</Button>
                             <AnimToggleButton animName="Comp Stat">PLAY</AnimToggleButton>
                         </Row>

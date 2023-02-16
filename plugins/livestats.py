@@ -45,13 +45,19 @@ async def read_live_stats(queue: asyncio.Queue, params: dict):
         payload = json.loads(decoded_line)
         p_type = payload.get("type", "")
         stats.receive(payload)
-        if p_type in LISTENERS:
-            funcs = LISTENERS[p_type]
-            for f in funcs:
-                try:
-                    await f(stats._game)
-                finally:
-                    continue
+        using_season_stats = STORE.get("use_season_stats", False)
+        if not using_season_stats:
+            await run_listeners(LISTENERS, p_type, stats._game)
+
+
+async def run_listeners(listeners, p_type, game):
+    if p_type in listeners:
+        funcs = listeners[p_type]
+        for f in funcs:
+            try:
+                await f(stats._game)
+            finally:
+                continue
 
 
 def get_starters(game: Game):
@@ -119,7 +125,7 @@ async def update_comp_stat(game: Game):
     if home_stat and away_stat:
         payload = {
             "compStatTitle": STAT_NAMES.get(stat, ""),
-            "compStatLine": f"DREXEL: {home_stat}     PENN: {away_stat}",
+            "compStatLine": f"DREXEL: <bold>{home_stat}</bold>&nbsp;&nbsp;&nbsp;&nbsp;HOFSTRA: <bold>{away_stat}</bold>",
         }
 
         await queue.put({"sender": "NCAA Live Stats", "payload": payload})

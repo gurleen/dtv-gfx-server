@@ -64,11 +64,16 @@ function setPreset() {
                             </select>
                         </Row>
                         <Row>
+                            Use season stats: 
+                            <input type="checkbox" on:change={(e) => store.update({using_season_stats: e.target.value})} />
+                        </Row>
+                        <Row>
                             Home LTH: {$store.homePlayerNum}
                         </Row>
                         <Row>
                             <Input number on:change={updateHome} />
                             <AnimToggleButton animName="Home Player Stats">PLAY</AnimToggleButton>
+                            {$store.homePlayerLine}
                         </Row>
                         <Row>
                             Away LTH: {$store.awayPlayerNum}
@@ -76,6 +81,7 @@ function setPreset() {
                         <Row>
                             <Input number on:change={updateAway} />
                             <AnimToggleButton animName="Away Player Stats">PLAY</AnimToggleButton>
+                            {$store.awayPlayerLine}
                         </Row>
                         <Row>
                             Home Trend:
